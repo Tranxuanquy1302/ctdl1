@@ -1,0 +1,233 @@
+/*
+ho ten : tran xuan quy
+msv: 17211TT0088
+date: 31.05.2019
+*/
+#include <iostream>
+#include <string>
+
+//khia bao CTDL
+using namespace std;
+struct  Node
+{
+	int iData;
+	Node*pNext;
+};
+struct List
+{
+	Node *pHead, *pTail;
+	List()
+	{
+		pHead = pTail = NULL;
+	}
+};
+//Khai bao nguyen mau ham
+Node *CreatedNode(float fN);
+
+//cau 1a
+void addtail(List &l, float fN);
+//cau 1b
+void insertAfter(List &l, float fx, float fy);
+//cau 1c
+//cau 1d
+Node *findX(List l, float fx);
+//cau 1e
+void sxgiam(List l);
+
+//cau 2a
+void input(List &l, int nN);
+//cau 2b
+void output(List l);
+//cau 2c
+float findMax(List l);
+void themMax1after(List l1, List l2, float &fx);
+//cau 2d
+
+//cau 2e
+int count(List l1, List l2);
+//ham main
+void main()
+{
+	//goi ham cau 2a,2b
+	List l1, l2;
+	float fX=0;
+	int n1, n2;
+	
+	cout << "Nhap n1: ";
+	cin >> n1;
+	cout << endl;
+	input(l1, n1);
+	output(l1);
+	//goi cau 2c
+	
+	//thuc thi cho l2
+	cout << "\nNhap n2: ";
+	cin >> n2;
+	cout << endl;
+	input(l2, n2);
+	output(l2);
+
+	//goi ham cau 2e
+	cout << "Sau khi sx giam dan" << endl;
+	sxgiam(l2);
+	output(l2);
+
+	//goi ham cau 1e
+	cout<<"dem: "<<count(l1, l2);
+
+	themMax1after(l1, l2, fX);
+	system("pause");
+}
+
+//Dinh nghia ham con
+/*
+	l la list
+	fx la data cua node
+	ham tra ve con tro kieu Node tro toi node fX
+	nguoc thi tra ve null
+*/
+Node *findX(List l, float fx)
+{
+	for ( Node *i = l.pHead ; i !=NULL ; i = i->pNext)
+	{
+		if (i->iData == fx)
+		{
+			return i;
+		}
+	}
+	return NULL;
+}
+float findMax(List l)
+{
+	float max = l.pHead->iData;
+	for (Node *i = l.pHead; i != NULL; i = i->pNext)
+	{
+		if (i->iData >max)
+		{
+			max = i->iData;
+		}
+	}
+	return max;
+}
+/*
+ham tao node moi co du lieu la fn
+fn la du lieu cua node
+tra ve con tro kieu node tro toi node moi
+*/
+Node *CreatedNode(float fN)
+{
+	Node *p = new Node;
+	p->iData = fN;
+	p->pNext = NULL;
+	return p;
+}
+
+void addtail(List &l, float fN)
+{
+	Node *pNew = CreatedNode(fN);
+	if (l.pHead == NULL)
+	{
+		l.pHead = l.pTail = pNew;
+	}
+	else
+	{
+		l.pTail->pNext = pNew;
+		l.pTail = pNew;
+	}
+}
+/*
+	viet ham nhap cho list vois so luong nhap nN
+*/
+void input(List &l, int nN)
+{
+	float fx = 0.0;
+	for (int i = 0; i < nN; i++)
+	{
+		cout << "\nNhap pt " << i + 1<<": ";
+		cin >> fx;
+		addtail(l, fx);
+	}
+}
+/*
+	ham xuat cho list
+*/
+void output(List l)
+{
+	for (Node* i = l.pHead; i != NULL; i = i->pNext)
+	{
+		cout << "\nPhan tu - "  << ": " << i->iData << endl;
+	}
+	cout << endl;
+}
+/*
+	sap xep cac phan tu theo thu tu giam dan
+*/
+void sxgiam(List l)
+{
+	for (Node* i = l.pHead ; i != NULL ; i=i->pNext )
+	{
+		for (Node * j = i->pNext ; j != NULL; j=j->pNext )
+		{
+			if (j->iData > i->iData)
+			{
+				swap(i->iData, j->iData);
+			}
+		}
+	}
+}
+
+/*
+	so sanh 2 ham xem phan tu k k co trong moi ham
+	so sanh 2 ham co phan tu co trong ca 2
+	cai tien ham tim kiem cau 1d viet ham dem so lan xuat hien phan tu dau cua l1 trong l2
+	dem so pt co mat o 2 ds l1 l2
+*/
+/*
+	tra ve so pt co mat o 2 ds l1 l2
+*/
+int count(List l1, List l2)
+{
+	int nCount = 0;
+	for (Node* i = l1.pHead ; i != NULL ; i=i->pNext )
+	{
+		if (findX(l2, i->iData) != NULL)
+		{
+			nCount++;
+		}
+	}
+	return nCount;
+}
+
+void insertAfter(List &l, float fx, float fy)
+{
+	Node *pNew = CreatedNode(fx);
+	Node *p = findX(l, fy);
+	if (p != NULL)
+	{
+		pNew->pNext = p->pNext;
+		p->pNext = pNew;
+		if (p ==l.pTail )
+		{
+			l.pTail = pNew;
+		}
+	}
+	else return;
+	/*
+		dung tham them sau 2c
+		 viet ham them node co gia tri bang tong cac pt l1 vao sao node lon nha l2
+		 viet ham them pt lon nhat cua l1 vao sau x l2
+		 viet ham them vao 1 pt x sau pt la so chinh phuong/ nguyen to/hoan thien /chan dau tien trong ds x
+		 viet ham them vao phan tu cuoi cung cua l2 sau pt nho nhat l1
+		*/
+}
+
+void themMax1after(List l1, List l2, float &fx)
+{
+	float dmax1 = findMax(l1);
+	cout << "\nNhap fx: ";
+	cin >> fx;
+	cout << endl;
+	insertAfter(l2, dmax1, fx);
+	cout << "\n ds l2 sau khi them max l1 vao sau " << fx << ":\n";
+	output(l2);
+}
